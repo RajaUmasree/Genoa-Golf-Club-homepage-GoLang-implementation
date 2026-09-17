@@ -1,0 +1,65 @@
+$ go build ./...
+(no output — build succeeded)
+
+$ go vet ./...
+(no output — vet clean)
+
+$ go test ./... -v -cover
+	github.com/genoagolfclub/homepage-service/cmd/server		coverage: 0.0% of statements
+	github.com/genoagolfclub/homepage-service/internal/config		coverage: 0.0% of statements
+=== RUN   TestHealthz
+--- PASS: TestHealthz (0.00s)
+=== RUN   TestGetAggregatedHomepage
+--- PASS: TestGetAggregatedHomepage (0.00s)
+=== RUN   TestListAnnouncements_WithLimitQueryParam
+--- PASS: TestListAnnouncements_WithLimitQueryParam (0.00s)
+=== RUN   TestAdminCreateHero_RequiresAuth
+--- PASS: TestAdminCreateHero_RequiresAuth (0.00s)
+=== RUN   TestAdminCreateHero_RejectsExpiredToken
+--- PASS: TestAdminCreateHero_RejectsExpiredToken (0.00s)
+=== RUN   TestAdminCreateHero_SucceedsWithValidToken
+--- PASS: TestAdminCreateHero_SucceedsWithValidToken (0.00s)
+=== RUN   TestAdminDeleteAnnouncement_NotFoundReturns404
+--- PASS: TestAdminDeleteAnnouncement_NotFoundReturns404 (0.00s)
+=== RUN   TestListUpcomingEvents_OnlyFutureEvents
+--- PASS: TestListUpcomingEvents_OnlyFutureEvents (0.00s)
+PASS
+coverage: 56.1% of statements
+ok  	github.com/genoagolfclub/homepage-service/internal/handlers	0.004s	coverage: 56.1% of statements
+	github.com/genoagolfclub/homepage-service/internal/middleware		coverage: 0.0% of statements
+	github.com/genoagolfclub/homepage-service/internal/models		coverage: 0.0% of statements
+=== RUN   TestGetActiveHero_ReturnsSeededHero
+--- PASS: TestGetActiveHero_ReturnsSeededHero (0.00s)
+=== RUN   TestUpsertHero_UpdatesActiveHero
+--- PASS: TestUpsertHero_UpdatesActiveHero (0.00s)
+=== RUN   TestListAnnouncements_RespectsLimitAndOrder
+--- PASS: TestListAnnouncements_RespectsLimitAndOrder (0.00s)
+=== RUN   TestCreateAndDeleteAnnouncement
+--- PASS: TestCreateAndDeleteAnnouncement (0.00s)
+=== RUN   TestListUpcomingEvents_ExcludesPastEvents
+--- PASS: TestListUpcomingEvents_ExcludesPastEvents (0.00s)
+=== RUN   TestListUpcomingEvents_SortedAscendingAndLimited
+--- PASS: TestListUpcomingEvents_SortedAscendingAndLimited (0.00s)
+=== RUN   TestListMembershipHighlights_SortedByPrice
+--- PASS: TestListMembershipHighlights_SortedByPrice (0.00s)
+=== RUN   TestListGalleryImages_ReturnsSeeded
+--- PASS: TestListGalleryImages_ReturnsSeeded (0.00s)
+PASS
+coverage: 95.0% of statements
+ok  	github.com/genoagolfclub/homepage-service/internal/repository	0.002s	coverage: 95.0% of statements
+	github.com/genoagolfclub/homepage-service/internal/routes		coverage: 0.0% of statements
+=== RUN   TestGetAggregatedHomepage_PopulatesAllSections
+--- PASS: TestGetAggregatedHomepage_PopulatesAllSections (0.00s)
+=== RUN   TestListAnnouncements_DefaultsLimitWhenZero
+--- PASS: TestListAnnouncements_DefaultsLimitWhenZero (0.00s)
+=== RUN   TestListUpcomingEvents_DefaultsLimitWhenZero
+--- PASS: TestListUpcomingEvents_DefaultsLimitWhenZero (0.00s)
+=== RUN   TestSetHero_CreatesActiveHero
+--- PASS: TestSetHero_CreatesActiveHero (0.00s)
+=== RUN   TestUpdateHero_NotFoundWhenIDMismatch
+--- PASS: TestUpdateHero_NotFoundWhenIDMismatch (0.00s)
+=== RUN   TestCreateAndDeleteAnnouncement
+--- PASS: TestCreateAndDeleteAnnouncement (0.00s)
+PASS
+coverage: 67.3% of statements
+ok  	github.com/genoagolfclub/homepage-service/internal/service	0.002s	coverage: 67.3% of statements

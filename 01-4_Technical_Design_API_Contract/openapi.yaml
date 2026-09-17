@@ -1,0 +1,272 @@
+openapi: 3.0.3
+info:
+  title: Genoa Golf Club — Homepage Service API
+  version: "1.0.0"
+  description: >
+    API contract for GGC_GL_01 (Homepage). Backs the public marketing site
+    landing page and its admin content-management endpoints.
+servers:
+  - url: /api/v1
+paths:
+  /homepage:
+    get:
+      summary: Aggregated homepage payload
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/HomepageResponse"
+  /homepage/hero:
+    get:
+      summary: Active hero banner
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/HeroBanner"
+        "404":
+          $ref: "#/components/responses/NotFound"
+  /homepage/announcements:
+    get:
+      summary: Latest announcements
+      parameters:
+        - in: query
+          name: limit
+          schema:
+            type: integer
+            default: 3
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Announcement"
+  /homepage/events:
+    get:
+      summary: Upcoming events
+      parameters:
+        - in: query
+          name: limit
+          schema:
+            type: integer
+            default: 5
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Event"
+  /homepage/membership-highlights:
+    get:
+      summary: Active membership tier highlights
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/MembershipHighlight"
+  /homepage/gallery:
+    get:
+      summary: Curated gallery images
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/GalleryImage"
+  /admin/homepage/hero:
+    post:
+      summary: Create/replace the active hero banner
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/HeroBannerInput"
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/HeroBanner"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+  /admin/homepage/hero/{id}:
+    put:
+      summary: Update a hero banner
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/HeroBannerInput"
+      responses:
+        "200":
+          description: OK
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "404":
+          $ref: "#/components/responses/NotFound"
+  /admin/homepage/announcements:
+    post:
+      summary: Create an announcement
+      security:
+        - bearerAuth: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/AnnouncementInput"
+      responses:
+        "201":
+          description: Created
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+  /admin/homepage/announcements/{id}:
+    delete:
+      summary: Delete an announcement
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      responses:
+        "204":
+          description: No Content
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "404":
+          $ref: "#/components/responses/NotFound"
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+  responses:
+    NotFound:
+      description: Not found
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/Error"
+    Unauthorized:
+      description: Unauthorized
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/Error"
+  schemas:
+    Error:
+      type: object
+      properties:
+        error:
+          type: object
+          properties:
+            code:
+              type: string
+            message:
+              type: string
+    HeroBanner:
+      type: object
+      properties:
+        id: { type: string }
+        headline: { type: string }
+        subtext: { type: string }
+        imageUrl: { type: string }
+        ctaLabel: { type: string }
+        ctaUrl: { type: string }
+        active: { type: boolean }
+        updatedAt: { type: string, format: date-time }
+    HeroBannerInput:
+      type: object
+      properties:
+        headline: { type: string }
+        subtext: { type: string }
+        imageUrl: { type: string }
+        ctaLabel: { type: string }
+        ctaUrl: { type: string }
+    Announcement:
+      type: object
+      properties:
+        id: { type: string }
+        title: { type: string }
+        body: { type: string }
+        postedAt: { type: string, format: date-time }
+    AnnouncementInput:
+      type: object
+      properties:
+        title: { type: string }
+        body: { type: string }
+    Event:
+      type: object
+      properties:
+        id: { type: string }
+        name: { type: string }
+        startDate: { type: string, format: date-time }
+        location: { type: string }
+    MembershipHighlight:
+      type: object
+      properties:
+        id: { type: string }
+        tier: { type: string }
+        price: { type: number }
+        benefits:
+          type: array
+          items: { type: string }
+    GalleryImage:
+      type: object
+      properties:
+        id: { type: string }
+        url: { type: string }
+        caption: { type: string }
+    HomepageResponse:
+      type: object
+      properties:
+        hero:
+          $ref: "#/components/schemas/HeroBanner"
+        announcements:
+          type: array
+          items:
+            $ref: "#/components/schemas/Announcement"
+        upcomingEvents:
+          type: array
+          items:
+            $ref: "#/components/schemas/Event"
+        membershipHighlights:
+          type: array
+          items:
+            $ref: "#/components/schemas/MembershipHighlight"
+        gallery:
+          type: array
+          items:
+            $ref: "#/components/schemas/GalleryImage"
